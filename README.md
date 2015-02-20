@@ -1,5 +1,5 @@
 # Timetable2Calendar
-Export MyEd PATH Timetable Data to .CSV file in order to import it to other Calendar apps (eg. Google, Apple).
+Export MyEd PATH Timetable Data to .CSV and .ICS files in order to import it to other Calendar apps (eg. Google, Apple).
 
 Theme: **Student Experience**
 
