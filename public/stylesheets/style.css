@@ -1,0 +1,15 @@
+table.toggle-table {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: middle;
+    text-align: center;
+}
+
+td, th {
+    padding: 10px 20px;
+    width:70px;
+}
+
+img.icon {
+    height: 120px;
+}
