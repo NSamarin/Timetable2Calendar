@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
 var server = require("server");
+var ejs = require("ejs");
+
 
 var request = require('request');
 var cheerio = require('cheerio'); //scraping tool
@@ -29,13 +31,12 @@ var startDay = 21;
 var skipWeek = false;
 var url = "https://browser.ted.is.ed.ac.uk/generate?courses[]=BITE10013_SS1_YR&courses[]=BITE10002_SV1_SEM1&courses[]=BITE10001_SV1_SEM1&courses[]=BITE10007_SV1_YR&courses[]=BITE10006_SV1_SEM2&courses[]=CMSE10002_SV1_SEM1&show-close=1&show-close=1&period=SEM1";
 
-//app.set('port', process.env.PORT || 3000);
-app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3002);
-app.set('ip', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
+app.set('port', process.env.PORT || 3000);
 
 // view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+app.engine('html', ejs.renderFile);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -44,17 +45,64 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'views')));
 
-app.use('/', routes);
+
+//app.use(express.static(path.join(__dirname, 'views')));
+
+app.get('/', function(req, res) {
+  res.render('index.html');
+});
+
+app.get('/download/csv', function(req, res) {
+    var url = req.query.url;
+    console.log(url);
+    if (!url) {
+        res.render('download.html');
+        return;
+    }
+    getFile(url, true);
+
+    res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
+    res.download('timetable.csv');
+    res.render('download.html');
+
+    console.log("ping from csv");
+
+    //res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
+    //res.download('timetable.csv');
+    //res.send('<b>timetable.csv and timetable.ics</b> have been successfully saved to your hard drive.');
+});
+
+app.get('/download/ics', function(req, res) {
+    var url = req.query.url;
+    console.log(url);
+    if (!url) {
+        res.render('download.html');
+        return;
+    }
+    getFile(url, false);
+
+    res.setHeader('Content-disposition', 'attachment; filename=timetable.ics');
+    res.download('timetable.ics');
+    res.render('download.html');
+
+    console.log("ping from ics");
+    //res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
+    //res.download('timetable.csv');
+    //res.send('<b>timetable.csv and timetable.ics</b> have been successfully saved to your hard drive.');
+});
 //app.use('/users', users);
+
+//router.get('/', function(req, res, next) {
+//  res.render('index');
+//});
 
 
 /*
  Main Function Start
  */
 
-app.get('/csvexport', function (req, res) {
+function getFile(url, isCSVRequest) {
     //url = 'https://browser.ted.is.ed.ac.uk/generate?courses[]=BILG09014_SV1_SEM2&courses[]=BUST10118_SV1_SEM2&courses[]=BUST10021_SV1_SEM2&show-close=1&period=SEM2#';
 
     request(url, function (error, response, html) {
@@ -104,16 +152,17 @@ app.get('/csvexport', function (req, res) {
                 });
             });
 
-            downloadCSV(startYear, startMonth, startDay, items);
-            downloadICS(startYear, startMonth, startDay, items);
+            if (isCSVRequest) downloadCSV(startYear, startMonth, startDay, items);
+            else downloadICS(startYear, startMonth, startDay, items);
+
+
 
         } else {
             console.log('url request failed');
         }
-        res.send('<b>timetable.csv and timetable.ics</b> have been successfully saved to your hard drive.');
 
     })
-});
+}
 
 /*
  Main Function End
@@ -151,13 +200,7 @@ app.use(function (err, req, res, next) {
     //});
 });
 
-//app.listen(app.get('port'));
-
-http.createServer(app).listen(app.get('port'), app.get('ip'), function () {
-    console.log("Express server listening at %s:%d ", app.get('ip'),app.get('port'));
-    server();
-});
-
+app.listen(app.get('port'));
 console.log('Express server listening on port ' + app.get('port'));
 
 module.exports = app;
