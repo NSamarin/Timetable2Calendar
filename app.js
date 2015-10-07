@@ -30,7 +30,8 @@ var startDay = 21;
 var skipWeek = false;
 var url = "https://browser.ted.is.ed.ac.uk/generate?courses[]=BITE10013_SS1_YR&courses[]=BITE10002_SV1_SEM1&courses[]=BITE10001_SV1_SEM1&courses[]=BITE10007_SV1_YR&courses[]=BITE10006_SV1_SEM2&courses[]=CMSE10002_SV1_SEM1&show-close=1&show-close=1&period=SEM1";
 
-app.set('port', process.env.PORT || 3000);
+var port = process.env.PORT || 3000;
+//pp.set('port', process.env.PORT || 3000);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -199,7 +200,11 @@ app.use(function (err, req, res, next) {
     //});
 });
 
-app.listen(app.get('port'));
-console.log('Express server listening on port ' + app.get('port'));
+app.listen(port, function() {
+    console.log('Express server listening on port ' + port);
+});
+
+//app.listen(app.get('port'));
+//console.log('Express server listening on port ' + app.get('port'));
 
 module.exports = app;
