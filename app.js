@@ -60,9 +60,12 @@ app.get('/download/csv', function(req, res) {
         res.redirect('/');
         return;
     }
-    getFile(url, true);
-    res.send('<b>timetable.csv</b> have been successfully saved to your hard drive.');
-    console.log("ping from csv");
+    getFile(url, true, function(ts) {
+        //console.log(ts);
+        res.send({ts:ts});
+        //console.log("ping from csv");
+    });
+
 });
 
 app.get('/download/ics', function(req, res) {
@@ -72,13 +75,18 @@ app.get('/download/ics', function(req, res) {
         res.redirect('/');
         return;
     }
-    getFile(url, false);
+    getFile(url, false, function(ts) {
+        //console.log(ts);
+        res.send({ts:ts});
+        //console.log("ping from ts");
+    });
 
-    res.setHeader('Content-disposition', 'attachment; filename=timetable.ics');
-    res.download('timetable.ics');
-    res.render('download.html');
 
-    console.log("ping from ics");
+    //res.setHeader('Content-disposition', 'attachment; filename=timetable.ics');
+    //res.download('timetable.ics');
+    //res.render('download.html');
+    //
+    //console.log("ping from ics");
     //res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
     //res.download('timetable.csv');
     //res.send('<b>timetable.csv and timetable.ics</b> have been successfully saved to your hard drive.');
@@ -94,8 +102,10 @@ app.get('/download/ics', function(req, res) {
  Main Function Start
  */
 
-function getFile(url, isCSVRequest) {
+function getFile(url, isCSVRequest, callback) {
+
     //url = 'https://browser.ted.is.ed.ac.uk/generate?courses[]=BILG09014_SV1_SEM2&courses[]=BUST10118_SV1_SEM2&courses[]=BUST10021_SV1_SEM2&show-close=1&period=SEM2#';
+    var ts = 0;
 
     request(url, function (error, response, html) {
         if (!error) {
@@ -144,8 +154,14 @@ function getFile(url, isCSVRequest) {
                 });
             });
 
-            if (isCSVRequest) downloadCSV(startYear, startMonth, startDay, items);
-            else downloadICS(startYear, startMonth, startDay, items);
+            if (isCSVRequest) {
+                ts = downloadCSV(startYear, startMonth, startDay, items);
+                callback(ts);
+            }
+            else {
+                ts = downloadICS(startYear, startMonth, startDay, items);
+                callback(ts);
+            }
 
 
 
@@ -153,7 +169,7 @@ function getFile(url, isCSVRequest) {
             console.log('url request failed');
         }
 
-    })
+    });
 }
 
 /*

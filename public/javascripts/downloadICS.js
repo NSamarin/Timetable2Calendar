@@ -16,10 +16,15 @@ function downloadICS(year, month, day, items) {
     // download stuff
     var buffer = csvData.join("\n");
     var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
-    var fileName = "timetable.ics";
+
+    var ts = Date.now();
+
+    var fileName = "./public/timetable_" + ts + ".ics";
     fs.writeFile(fileName, buffer, function (err) {
         console.log('File successfully written! - Check your project directory for the timetable.ics file');
     });
+
+    return ts;
 }
 
 module.exports = downloadICS;
