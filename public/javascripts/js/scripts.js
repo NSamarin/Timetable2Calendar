@@ -8,7 +8,7 @@ $(document).ready(function () {
             $("div.toggle").toggle();
             $(".btn-primary").click(function () {
 
-                    if (!isUrlValid($('input').val())) {
+                    if (!isUrlValid($('input').val()) || $('input').val().indexOf("path") == -1) {
                             $($('input')).parents('div').addClass('has-warning');
                             alert("Your link is not correct, please try again.");
                         } else {
