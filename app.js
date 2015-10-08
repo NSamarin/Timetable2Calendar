@@ -57,27 +57,19 @@ app.get('/download/csv', function(req, res) {
     var url = req.query.url;
     console.log(url);
     if (!url) {
-        res.render('download.html');
+        res.redirect('/');
         return;
     }
     getFile(url, true);
-
-    res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
-    res.download('timetable.csv');
-    res.render('download.html');
-
+    res.send('<b>timetable.csv</b> have been successfully saved to your hard drive.');
     console.log("ping from csv");
-
-    //res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
-    //res.download('timetable.csv');
-    //res.send('<b>timetable.csv and timetable.ics</b> have been successfully saved to your hard drive.');
 });
 
 app.get('/download/ics', function(req, res) {
     var url = req.query.url;
     console.log(url);
     if (!url) {
-        res.render('download.html');
+        res.redirect('/');
         return;
     }
     getFile(url, false);

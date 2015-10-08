@@ -13,7 +13,10 @@ function downloadCSV(year, month, day, items) {
     // download stuff
     var buffer = csvData.join("\n");
     var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
-    var fileName = "timetable.csv";
+
+
+
+    var fileName = "./public/timetable.csv";
     fs.writeFile(fileName, buffer, function (err) {
         console.log('File successfully written! - Check your project directory for the timetable.csv file');
     });

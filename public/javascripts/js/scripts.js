@@ -8,9 +8,9 @@ $(document).ready(function(){
 
     $("#google").click(function() {
         var url = $("#url_input").val();
-        $.get( "/download/csv", {url: url}, function() {
-            console.log("download performed");
-            window.location.href = '/download/csv';
+        $.get( "/download/csv", {url: url}, function(response) {
+            console.log("from front", response);
+            window.location.href = '/timetable.csv';
         });
 
     });
