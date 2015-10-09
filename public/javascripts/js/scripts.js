@@ -59,7 +59,7 @@ $(document).ready(function () {
         var url = $("#url_input").val();
         $.get("/download/csv", {url: url}, function (response) {
             ts = response.ts;
-            window.location.href = '/timetable_' + ts + '.csv';
+            window.location.href = '/timetables/timetable_' + ts + '.csv';
         });
 
     });
@@ -68,7 +68,7 @@ $(document).ready(function () {
         var url = $("#url_input").val();
         $.get("/download/ics", {url: url}, function (response) {
             ts = response.ts;
-            window.location.href = '/timetable_' + ts + '.ics';
+            window.location.href = '/timetables/timetable_' + ts + '.ics';
         });
 
     });

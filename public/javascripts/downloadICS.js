@@ -19,7 +19,7 @@ function downloadICS(year, month, day, items) {
 
     var ts = Date.now();
 
-    var fileName = "./public/timetable_" + ts + ".ics";
+    var fileName = "./public/timetables/timetable_" + ts + ".ics";
     fs.writeFile(fileName, buffer, function (err) {
         console.log('File successfully written! - Check your project directory for the timetable.ics file');
     });
