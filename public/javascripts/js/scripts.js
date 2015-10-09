@@ -17,22 +17,18 @@ $(document).ready(function () {
 
     $("#google").click(function () {
         var url = $("#url_input").val();
-        $.get("/download/csv", {
-            url: url
-        }, function (response) {
-            console.log("from front", response);
-            window.location.href = '/timetable.csv';
+        $.get("/download/csv", {url: url}, function (response) {
+            ts = response.ts;
+            window.location.href = '/timetables/timetable_' + ts + '.csv';
         });
 
     });
 
     $("#apple").click(function () {
         var url = $("#url_input").val();
-        $.get("/download/ics", {
-            url: url
-        }, function () {
-            console.log("download performed");
-            window.location.href = '/download/ics';
+        $.get("/download/ics", {url: url}, function (response) {
+            ts = response.ts;
+            window.location.href = '/timetables/timetable_' + ts + '.ics';
         });
 
     });
