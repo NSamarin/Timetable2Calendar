@@ -6,47 +6,10 @@ function isUrlValid(url) {
 //|| $('input').val().indexOf("path") == -1
 $(document).ready(function () {
 
-<<<<<<< HEAD
-            $("div.toggle").toggle();
-            $(".btn-primary").click(function () {
-
-                    if (!isUrlValid($('input').val())) {
-                            $($('input')).parents('div').addClass('has-warning');
-                            alert("Your link is not correct, please try again.");
-                        } else {
-                            $("div.toggle").toggle(1000);
-                        }
-                    });
-
-
-
-                $("#google").click(function () {
-                    var url = $("#url_input").val();
-                    $.get("/download/csv", {
-                        url: url
-                    }, function (response) {
-                        console.log("from front", response);
-                        window.location.href = '/timetable.csv';
-                    });
-
-                });
-
-                $("#apple").click(function () {
-                    var url = $("#url_input").val();
-                    $.get("/download/ics", {
-                        url: url
-                    }, function () {
-                        console.log("download performed");
-                        window.location.href = '/download/ics';
-                    });
-
-                });
-            });
-=======
     $("div.toggle").toggle();
     $(".btn-primary").click(function () {
 
-        if (!isUrlValid($('input').val()) || $('input').val().indexOf("path") == -1) {
+        if (!isUrlValid($('input').val())) {
             $($('input')).parents('div').addClass('has-warning');
             alert("Your link is not correct, please try again.");
         } else {
@@ -57,20 +20,55 @@ $(document).ready(function () {
 
     $("#google").click(function () {
         var url = $("#url_input").val();
-        $.get("/download/csv", {url: url}, function (response) {
-            ts = response.ts;
-            window.location.href = '/timetables/timetable_' + ts + '.csv';
+        $.get("/download/csv", {
+            url: url
+        }, function (response) {
+            console.log("from front", response);
+            window.location.href = '/timetable.csv';
         });
 
     });
 
     $("#apple").click(function () {
         var url = $("#url_input").val();
-        $.get("/download/ics", {url: url}, function (response) {
-            ts = response.ts;
-            window.location.href = '/timetables/timetable_' + ts + '.ics';
+        $.get("/download/ics", {
+            url: url
+        }, function () {
+            console.log("download performed");
+            window.location.href = '/download/ics';
         });
 
     });
 });
->>>>>>> origin/master
+
+$("div.toggle").toggle();
+$(".btn-primary").click(function () {
+
+    if (!isUrlValid($('input').val()) || $('input').val().indexOf("path") == -1) {
+        $($('input')).parents('div').addClass('has-warning');
+        alert("Your link is not correct, please try again.");
+    } else {
+        $("div.toggle").toggle(1000);
+    }
+});
+
+
+$("#google").click(function () {
+    var url = $("#url_input").val();
+    $.get("/download/csv", {url: url}, function (response) {
+        ts = response.ts;
+        window.location.href = '/timetables/timetable_' + ts + '.csv';
+    });
+
+});
+
+$("#apple").click(function () {
+    var url = $("#url_input").val();
+    $.get("/download/ics", {url: url}, function (response) {
+        ts = response.ts;
+        window.location.href = '/timetables/timetable_' + ts + '.ics';
+    });
+
+});
+
+
