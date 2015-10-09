@@ -14,12 +14,14 @@ function downloadCSV(year, month, day, items) {
     var buffer = csvData.join("\n");
     var uri = "data:text/csv;charset=utf8," + encodeURIComponent(buffer);
 
+    var ts = Date.now();
 
-
-    var fileName = "./public/timetable.csv";
+    var fileName = "./public/timetable_" + ts + ".csv";
     fs.writeFile(fileName, buffer, function (err) {
         console.log('File successfully written! - Check your project directory for the timetable.csv file');
     });
+
+    return ts;
 }
 
 module.exports = downloadCSV;
