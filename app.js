@@ -61,7 +61,7 @@ app.get('/download/csv', function(req, res) {
         return;
     }
     getFile(url, true, function(ts) {
-        //console.log(ts);
+        console.log(ts);
         res.send({ts:ts});
         //console.log("ping from csv");
     });
@@ -76,7 +76,7 @@ app.get('/download/ics', function(req, res) {
         return;
     }
     getFile(url, false, function(ts) {
-        //console.log(ts);
+        console.log(ts);
         res.send({ts:ts});
         //console.log("ping from ts");
     });
