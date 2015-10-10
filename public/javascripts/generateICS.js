@@ -1,6 +1,5 @@
-var exportArray = [];
-
 function generateICS(startYear, startMonth, startDay, items) {
+    var exportArray = [];
     //Filter "items" array so that only lecture events are created
     var lectures = items.filter(function (item) {
         return item.type == "Lecture";

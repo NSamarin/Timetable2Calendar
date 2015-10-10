@@ -1,6 +1,5 @@
-var exportArray = [];
-
 function generateCSV(startYear, startMonth, startDay, items) {
+    var exportArray = [];
     //create export array and populate the headers
     exportArray = [{
         subject: "Subject",
