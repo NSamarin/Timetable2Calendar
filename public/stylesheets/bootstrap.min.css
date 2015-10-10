@@ -5314,7 +5314,7 @@ textarea.input-group-sm>.input-group-btn>.btn {
     }
     .navbar-form .form-control {
         display: inline-block;
-        width: 200px;
+        width: 300px;
         vertical-align: middle
     }
     .navbar-form .form-control-static {
