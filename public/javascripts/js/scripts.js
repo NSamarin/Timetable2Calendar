@@ -22,7 +22,6 @@ $(document).ready(function () {
     $("#google").click(function () {
         
         $('<p class="text-success">Please wait, downloading will start in 5 sec...</p>').appendTo('#intro');
-        console.log('google pressed');
         var url = $("#url_input").val();
         $.get("/download/csv", {
             url: url
@@ -34,7 +33,7 @@ $(document).ready(function () {
     });
 
     $("#apple").click(function () {
-        $("#intro").text("Downloading will start in 5 sec...");
+        $('<p class="text-success">Please wait, downloading will start in 5 sec...</p>').appendTo('#intro');
         var url = $("#url_input").val();
         $.get("/download/ics", {
             url: url
