@@ -20,11 +20,19 @@
             background-image: url("../masthead_xs.PNG");
             height: 500px;
         }
+        .guide {
+            background-image: url("../guide.jpg");
+            height: 200px;
+        }
     }
     
     @media (min-width:768px) {
         .masthead {
             background-image: url("../masthead.jpg");
+            height: 200px;
+        }
+        .guide {
+            background-image: url("../guide.jpg");
             height: 200px;
         }
     }
@@ -33,21 +41,36 @@
         .masthead {
             height: 300px;
         }
+        .guide {
+            background-image: url("../guide.jpg");
+            height: 250px;
+        }
     }
     
     @media (min-width:1200px) {
         .masthead {
             height: 400px;
         }
+        .guide {
+            background-image: url("../guide.jpg");
+            height: 250px;
+        }
     }
     
     .masthead {
-        
         background-repeat: no-repeat;
         background-size: contain;
         background-position: 50%;
         margin-bottom: 10px;
         margin-top: -30px;
+    }
+    
+    .guide {
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: 50%;
+        margin-bottom: -35px;
+        margin-top: -55px;
     }
     
     .drop-shadow {
