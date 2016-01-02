@@ -30,13 +30,15 @@ function generateCSV(startYear, startMonth, startDay, items) {
         for (var k = 0; k < weeks.length; k++) {
             //get the week offset - that is how many days need to be added to the initial date
             var weekOffset = (parseInt(weeks[k]) - 1) * 7;
+            //adjust for innovative learning week (that is, skip one week)
+            if (k >= 5) weekOffset += 7;
             //create the date object for all the events for a particular item
             var date = new Date(startYear, startMonth, (startDay + dayOffset + weekOffset));
             var formattedDate = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
 
             //push events to the export array
             exportArray.push({
-                subject: currentItem["course"],
+                subject: '\"' + currentItem["course"] + '\"',
                 startDate: formattedDate,
                 startTime: times["startTime"],
                 endDate: formattedDate,

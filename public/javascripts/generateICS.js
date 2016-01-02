@@ -18,6 +18,8 @@ function generateICS(startYear, startMonth, startDay, items) {
         for (var k = 0; k < weeks.length; k++) {
             //get the week offset - that is how many days need to be added to the initial date
             var weekOffset = (parseInt(weeks[k]) - 1) * 7;
+            //adjust for innovative learning week (that is, skip one week)
+            if (k >= 5) weekOffset += 7;
             //create the date object for all the events for a particular item
             var date = new Date(startYear, startMonth, (startDay + dayOffset + weekOffset));
             //format dates to ICS standard (date + T + time + Z)
@@ -32,12 +34,13 @@ function generateICS(startYear, startMonth, startDay, items) {
             if (currentMinutes.length == 1) currentMinutes = "0" + currentMinutes;
             var dateStamp = formatDateICS(currentDate, currentHours + currentMinutes + "00");
 
-            //format location so that it maches specification
-            var location = formatLocationICS(currentItem["location"]);
+            //escape location and course name so that it matches ICS specification
+            var location = formatFieldICS(currentItem["location"]);
+            var subject = formatFieldICS(currentItem["course"]);
 
             //push events to the export array
             exportArray.push({
-                subject: currentItem["course"],
+                subject: subject,
                 startDate: dateStart,
                 endDate: dateEnd,
                 dateStamp: dateStamp,
@@ -99,14 +102,14 @@ function formatDateICS(date, time) {
     return date.getFullYear().toString() + month + day + 'T' + time;
 }
 
-function formatLocationICS(location) {
-    var formattedLocation = "";
-    var locations = location.split(",");
-    for (var i = 0; i < locations.length; i++) {
-        formattedLocation += locations[i];
-        if (i + 1 != locations.length) formattedLocation += "\\,";
+function formatFieldICS(field) {
+    var formattedField = "";
+    var fields = field.split(",");
+    for (var i = 0; i < fields.length; i++) {
+        formattedField += fields[i];
+        if (i + 1 != fields.length) formattedField += "\\,";
     }
-    return formattedLocation;
+    return formattedField;
 }
 
 module.exports = generateICS;
