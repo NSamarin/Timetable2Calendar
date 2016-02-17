@@ -1,8 +1,11 @@
-function generateCSV(startYear, startMonth, startDay, items) {
-    var exportArray = [];
+function generateCSV(startYear, startMonth, startDay, events) {
+
     //create export array and populate the headers
-    exportArray = [{
+    var exportArray = [{
+        type: "Type",
+        option: "Option",
         subject: "Subject",
+        day: "Day",
         startDate: "Start Date",
         startTime: "Start Time",
         endDate: "End Date",
@@ -13,13 +16,13 @@ function generateCSV(startYear, startMonth, startDay, items) {
     }];
 
     //Filter "items" array so that only lecture events are created
-    var lectures = items.filter(function (item) {
-        return item.type == "Lecture";
-    });
+    //var lectures = items.filter(function (item) {
+    //    return item.type == "Lecture";
+    //});
 
     //loop through lectures
-    for (var i = 0; i < lectures.length; i++) {
-        var currentItem = lectures[i];
+    for (var i = 0; i < events.length; i++) {
+        var currentItem = events[i];
         //get the weeks property
         var weeks = currentItem["weeks"];
         //extract correctly formatted start and end times
@@ -38,7 +41,10 @@ function generateCSV(startYear, startMonth, startDay, items) {
 
             //push events to the export array
             exportArray.push({
-                subject: '\"' + currentItem["course"] + '\"',
+                type: currentItem["type"],
+                option: currentItem["option"],
+                subject: '\"' + currentItem["course"] + " (" + currentItem["type"] + ")"  + '\"',
+                day: currentItem["day"],
                 startDate: formattedDate,
                 startTime: times["startTime"],
                 endDate: formattedDate,
@@ -49,6 +55,9 @@ function generateCSV(startYear, startMonth, startDay, items) {
             });
         }
     }
+
+    //console.log(exportArray);
+
     return exportArray;
 }
 
@@ -81,11 +90,12 @@ function getDayOffset(day) {
     return dayOffset;
 }
 
-function extractTimeCSV(timeProperty) {
-    var times = timeProperty.split(",");
-    var start = times[0].substr(6);
-    var end = times[1].substr(4);
-    return {startTime: formatTimeCSV(start), endTime: formatTimeCSV(end)};
+function extractTimeCSV(times) {
+    //var times = timeProperty.split(",");
+    //var start = times[0].substr(6);
+    //var end = times[1].substr(4);
+
+    return {startTime: formatTimeCSV(times["start"]), endTime: formatTimeCSV(times["end"])};
 }
 
 function formatTimeCSV(time) {

@@ -11,6 +11,8 @@ var ejs = require("ejs");
 var request = require('request');
 var cheerio = require('cheerio'); //scraping tool
 
+
+var generateCSV = require('./public/javascripts/generateCSV');
 var downloadCSV = require('./public/javascripts/downloadCSV');
 var downloadICS = require('./public/javascripts/downloadICS');
 
@@ -53,6 +55,18 @@ app.get('/', function(req, res) {
   res.render('index.html');
 });
 
+app.get('/generate/csv', function(req, res) {
+    var url = req.query.url;
+    console.log("Generating from " + url);
+    if (!url) {
+        res.redirect('/');
+        return;
+    }
+    generateFile(url, true, function(data) {
+        res.send(data);
+    });
+});
+
 app.get('/download/csv', function(req, res) {
     var url = req.query.url;
     console.log(url);
@@ -65,7 +79,6 @@ app.get('/download/csv', function(req, res) {
         res.send({ts:ts});
         //console.log("ping from csv");
     });
-
 });
 
 app.get('/download/ics', function(req, res) {
@@ -81,21 +94,7 @@ app.get('/download/ics', function(req, res) {
         //console.log("ping from ts");
     });
 
-
-    //res.setHeader('Content-disposition', 'attachment; filename=timetable.ics');
-    //res.download('timetable.ics');
-    //res.render('download.html');
-    //
-    //console.log("ping from ics");
-    //res.setHeader('Content-disposition', 'attachment; filename=timetable.csv');
-    //res.download('timetable.csv');
-    //res.send('<b>timetable.csv and timetable.ics</b> have been successfully saved to your hard drive.');
 });
-//app.use('/users', users);
-
-//router.get('/', function(req, res, next) {
-//  res.render('index');
-//});
 
 
 /*
@@ -124,11 +123,71 @@ function getFile(url, isCSVRequest, callback) {
             event.weeks = [];
             var items = [];
 
+            var test = [];
+
+            //var newDay = "";
+
+
+            $('div.event').each(function (i) {
+
+                var self = this;
+
+                function getOption(){
+                    var opt = $(self).find('span.label').text();
+                    if (opt) opt = opt.split(" ")[1];
+                    return opt;
+                }
+
+                function getWeeks(){
+                    var weeks = [];
+                    $(self).find('table.weeks td.on').each(function (j){
+                        weeks.push($(this).text());
+                    });
+                    return weeks;
+                }
+
+                function getDay(i){
+                    var day = $(self).parent().parent().find('th').text();
+                    if (day == '' && i != 0) day = test[i - 1].day;
+                    return day;
+                    //if (day != "") newDay = day;
+                    //return newDay;
+                }
+
+                function getLocation() {
+                    var location = $(self).find('ul.facts').children().last().clone().find('span').remove().end().text().trim();
+                    if (location.match(/Sem/g)) location = "";
+                    return location;
+
+                    //$(this).find('ul.facts > li:nth-of-type(2)').text().trim().replace(/Location:\r\n\t\t\t\t/, ""),
+                }
+
+                test[i] = {
+                    course: $(this).find('span.course').text(),
+                    option: getOption(),
+                    type: $(this).find('span.type > small.centre').remove().end().find('span.type').text().trim(),
+                    times: {
+                        start: $(this).find('div.times > strong:nth-of-type(1)').text(),
+                        end: $(this).find('div.times > strong:nth-of-type(2)').text()
+                    },
+                    location: $(this).find('ul.facts > li:nth-of-type(2)').text().trim().replace(/Location:\r\n\t\t\t\t/, ""),
+                    //location: $(this).find('ul.facts > li:nth-of-type(2) span').remove().end().find('ul.facts > li:nth-of-type(2)').text().trim(),
+                    weeks: getWeeks(),
+                    day: getDay(i)
+                };
+
+            });
+
+            //console.log(test);
+
 
             $('.event-head span.course').each(function (i, elem) {
                 items[i] = {
                     course: $(this).text()
                 };
+
+
+
                 items[i].day = $(this).parent().parent().parent().parent().find('th').text();
                 if (items[i].day == '' && i != 0) {
                     items[i].day = items[i - 1].day;
@@ -155,7 +214,7 @@ function getFile(url, isCSVRequest, callback) {
             });
 
             if (isCSVRequest) {
-                ts = downloadCSV(startYear, startMonth, startDay, items);
+                ts = downloadCSV(startYear, startMonth, startDay, test);
                 callback(ts);
             }
             else {
@@ -176,6 +235,66 @@ function getFile(url, isCSVRequest, callback) {
  Main Function End
  */
 
+function generateFile(url, isCSVRequest, returnCall) {
+
+    request(url, function (error, response, html) {
+        if (!error) {
+            var $ = cheerio.load(html);
+
+            var events = [];
+
+
+            $('div.event').each(function (i) {
+
+                var self = this;
+
+                function getOption(){
+                    var opt = $(self).find('span.label').text();
+                    if (opt) opt = opt.split(" ")[1];
+                    return opt;
+                }
+
+                function getWeeks(){
+                    var weeks = [];
+                    $(self).find('table.weeks td.on').each(function (j){
+                        weeks.push($(this).text());
+                    });
+                    return weeks;
+                }
+
+                function getDay(i){
+                    var day = $(self).parent().parent().find('th').text();
+                    if (day == '' && i != 0) day = events[i - 1].day;
+                    return day;
+                }
+
+
+                events[i] = {
+                    course: $(this).find('span.course').text(),
+                    option: getOption(),
+                    type: $(this).find('span.type > small.centre').remove().end().find('span.type').text().trim(),
+                    times: {
+                        start: $(this).find('div.times > strong:nth-of-type(1)').text(),
+                        end: $(this).find('div.times > strong:nth-of-type(2)').text()
+                    },
+                    location: $(this).find('ul.facts > li:nth-of-type(2)').text().trim().replace(/Location:\r\n\t\t\t\t/, ""),
+                    weeks: getWeeks(),
+                    day: getDay(i)
+                };
+
+            });
+
+            if (isCSVRequest) {
+                var data = generateCSV(startYear, startMonth, startDay, events);
+                returnCall(data);
+            }
+
+        } else {
+            console.log('url request failed');
+        }
+
+    });
+}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
