@@ -22,7 +22,7 @@ function addOptions(events, eventType, allEventTypes) {
         encounteredOptions.push(item['option']);
         return item['type'] == eventType;
     });
-    var label = $.inArray(eventType, allEventTypes) + 1;
+    var label = $.inArray(eventType, allEventTypes) + 1; //hi world
 
     var text;
     for (var j = 0; j < items.length; j++) {
