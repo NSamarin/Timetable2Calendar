@@ -19,7 +19,7 @@ function generateICS(startYear, startMonth, startDay, items) {
             //get the week offset - that is how many days need to be added to the initial date
             var weekOffset = (parseInt(weeks[k]) - 1) * 7;
             //adjust for innovative learning week (that is, skip one week)
-            if (k >= 5) weekOffset += 7;
+            //if (k >= 5) weekOffset += 7;
             //create the date object for all the events for a particular item
             var date = new Date(startYear, startMonth, (startDay + dayOffset + weekOffset));
             //format dates to ICS standard (date + T + time + Z)
