@@ -27,7 +27,7 @@ var startYear = 2016;
 var startMonth = 8;
 var startDay = 19;
 
-var skipWeek = false;
+var skipWeek = true;
 var url = "https://browser.ted.is.ed.ac.uk/generate?courses[]=BITE10013_SS1_YR&courses[]=BITE10002_SV1_SEM1&courses[]=BITE10001_SV1_SEM1&courses[]=BITE10007_SV1_YR&courses[]=BITE10006_SV1_SEM2&courses[]=CMSE10002_SV1_SEM1&show-close=1&show-close=1&period=SEM1";
 
 var port = process.env.PORT || 3000;
