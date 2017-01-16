@@ -9,6 +9,7 @@
     th {
         padding: 10px 20px;
         width: 70px;
+        vertical-align:top;
     }
     
     img.icon {
